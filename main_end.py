@@ -578,6 +578,13 @@ def generate_comprehensive_report(main_text: str, log_text: str,
 
 
 def save_report_to_file(report: Dict, filename: str = "report.txt") -> None:
+    """
+    Сохраняет отчёт в текстовый файл.
+
+    Args:
+        report (Dict): Сгенерированный отчёт
+        filename (str): Имя файла для сохранения
+    """
 
     with open(filename, "w", encoding="utf-8") as f:
         f.write("=" * 50 + "\n")
@@ -600,25 +607,26 @@ def save_report_to_file(report: Dict, filename: str = "report.txt") -> None:
         f.write("РАСШИФРОВАННЫЕ СООБЩЕНИЯ:\n")
         for k, v in report['encoded_massages'].items():
             if v:
-                f.write(f" {k}: {len(v)} найдено\n")
+                f.write(f" {k}: {(v)} \n")
         f.write("\n")
 
         f.write("УГРОЗЫ БЕЗОПАСНОСТИ:\n")
         for k, v in report['security_threats'].items():
-            f.write(f" {k}: {len(v)} найдено\n")
+            f.write(f" {k}: {(v)} \n")
         f.write("\n")
 
         f.write("НОРМАЛИЗОВАННЫЕ ДАННЫЕ:\n")
         normalized = report.get('normalized_data', {})
         for category, data in normalized.items():
-            valid_count = len(data.get('valid', []))
-            invalid_count = len(data.get('invalid', []))
+            valid_count = (data.get('valid', []))
+            invalid_count = (data.get('invalid', []))
             f.write(f" {category}: {valid_count} валидных, {invalid_count} невалидных\n")
 
     print(f"\nОтчёт сохранён в файл: {filename}")
 
 
 if __name__ == "__main__":
+    # Чтение исходных данных
     with open('data_leak_sample.txt', 'r', encoding='utf-8') as f:
         main_text = f.read()
 
@@ -628,6 +636,8 @@ if __name__ == "__main__":
     with open('messy_data.txt', 'r', encoding='utf-8') as f:
         messy_data = f.read()
 
+    # Генерация отчёта
     report = generate_comprehensive_report(main_text, log_text, 'messy_data.txt')
 
+    # Сохранение отчёта в файл
     save_report_to_file(report, "report.txt")
